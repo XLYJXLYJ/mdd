@@ -45,28 +45,28 @@
             </div>
         </div>
         <!-- 登陆 -->
-        <!-- <transition name="el-fade-in-linear">
+        <transition name="el-fade-in-linear">
             <login></login>
-        </transition> -->
+        </transition>
         <!-- 注册 -->
-        <!-- <transition name="el-fade-in-linear">
+        <transition name="el-fade-in-linear">
             <signup></signup>
-        </transition> -->
+        </transition>
         <!-- 忘记密码 -->
-        <!-- <transition name="el-fade-in-linear">
+        <transition name="el-fade-in-linear">
             <ForgetPassword></ForgetPassword>
-        </transition> -->
+        </transition>
         <!-- 上传 -->
-        <!-- <transition name="el-fade-in-linear">
+        <transition name="el-fade-in-linear">
             <upload></upload>
-        </transition> -->
+        </transition>
         
     </header>
 </template>
 <script>
-// import login from '@/components/login/Login'
-// import signup from '@/components/login/Signup'
-// import ForgetPassword from '@/components/login/ForgetPassword'
+import login from '@/components/login/Login'
+import signup from '@/components/login/Signup'
+import ForgetPassword from '@/components/login/ForgetPassword'
 import upload from '@/components/upload'
 import message from '@/components/message'
 import func from '../public/func';
@@ -95,8 +95,7 @@ export default {
         }
     },
     components: {
-        // login,signup,ForgetPassword,
-        upload,message
+        login,signup,ForgetPassword,upload,message
     },
     computed: {
     },
@@ -120,7 +119,11 @@ export default {
             }
         },
         search() {
-            this.$router.push(`/search/${this.text}`)
+            if(!this.text) {
+                this.$router.push(`/search/${this.text}`)
+            }else{
+                this.Message("请输入搜索关键字","success")
+            }
         },
         quitLogin() {
             func.ajaxGet(
@@ -128,6 +131,10 @@ export default {
                 res => {
                     if(res.data.status == 200){
                         if(res.data.data) {
+                            if(localStorage) {
+                                localStorage.removeItem("modelUserid");
+                                console.log("清除成功")
+                            }
                             this.Message('退出成功','success');
                             this.isuserCli = false;
                             window.location.href = "/";
@@ -175,15 +182,6 @@ export default {
         //         this.isLogin = true;
         //     }
         // }
-        // func.ajaxPost(
-        //     api.getfile,
-        //     {
-        //         id:11595,
-        //     },
-        //     res => {
-        //         console.log(res.data);
-        //     }
-        // )
         if(this.$router.currentRoute.path == '/2D') {
             this.current = 1
         }else if(this.$router.currentRoute.path == '/3D') {
@@ -205,9 +203,19 @@ export default {
                             this.setuserheadportrait(res.data.data.headportrait)
                         }
                         this.promptMessage = res.data.data.message;
-                        console.log(res.data.data.message)
+                        if(localStorage) {
+                            if(localStorage.getItem("modelUserid")) {
+                                if(localStorage.getItem("modelUserid") !== res.data.data.userid) {
+                                    localStorage.setItem("modelUserid",res.data.data.userid);
+                                    console.log("重新赋值")
+                                }
+                            }else{
+                                localStorage.setItem("modelUserid",res.data.data.userid);
+                                console.log("初始化")
+                            }
+                        }
                     }
-                } 
+                }
                 
             }
         )
@@ -260,7 +268,7 @@ export default {
             }
             .search-btn{
                 width: 300px;
-                margin-top: 10px;
+                margin-top: 15px;
                 input{
                     background-color: #383838;
                 }
@@ -268,8 +276,8 @@ export default {
             .loginBox{
                 span{
                     // width: 94px;
-                    height: 34px;
-                    line-height: 34px;
+                    height: 32px;
+                    line-height: 32px;
                     border: 1px solid #fff;
                     border-radius: 5px;
                     background: #383838;
@@ -354,7 +362,7 @@ export default {
                     margin-right: 30px;
                 }
                 .uploadbtn{
-                    width: 94px;
+                    width: 88px;
                 }
             }
         }

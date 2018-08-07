@@ -15,16 +15,8 @@ export default {
     dealmodule: host + 'api/material/dealmodule',
     modulelist: host + 'api/material/modulelist',
     userinfo: host + 'api/material/userinfo',
-<<<<<<< .mine
-    useropreate: host + 'api/material/useropreate',
-||||||| .r32
-
-
-    useropreate: host + 'api/material/useropreate',
-=======
     useropreate: host + 'api/material/useropreate',
     commentmodule: host + 'api/material/commentmodule',
     getcomment: host + 'api/material/getcomment',
 
->>>>>>> .r33
 }

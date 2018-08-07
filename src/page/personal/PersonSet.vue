@@ -150,7 +150,6 @@ export default {
             this.tags.push(this.tag);
             this.tag = '';
         },
-        //删除变迁标签
         deleteTag(index) {
             this.tags.splice(index,1);
         },

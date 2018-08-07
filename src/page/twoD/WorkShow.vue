@@ -3,7 +3,7 @@
   <div id="show-work">
       <!-- 视频播放 -->
       <section class="fl">
-          <video src=""></video>
+          <model :childModelInfo="modelInfo"></model>
       </section>
       <!-- 右侧边栏 -->
       <aside class="fr">
@@ -12,13 +12,7 @@
               <!-- 个人信息 -->
               <div class="author-detail clear">
                   <router-link :to="{path:'/author/'+info.authid}">
-<<<<<<< .mine
-                    <!-- <div class="author-headportrait fl"><img src="../../assets/img/head.jpg" alt=""></div> -->
-||||||| .r32
-                    <div class="author-headportrait fl"><img src="../../assets/img/head.jpg" alt=""></div>
-=======
                     <div class="author-headportrait fl"><img :src="info.headportrait" alt="" onerror="javascript:this.src=window.errorImg"></div>
->>>>>>> .r33
                   </router-link>
                   <div class="author-middle fl">
                       <router-link :to="{path:'/author/'+info.authid}">
@@ -57,7 +51,8 @@
                   </button>
                   <button class="down">
                       <span class="iconfont icon-xiazai"></span>
-                      <span>下载</span>
+                      <a :href="info.modelsrc" download><span>下载</span></a>
+                      
                   </button>
                   <button class="share">
                       <span class="iconfont icon-31fenxiang"></span>
@@ -125,12 +120,16 @@ import store from '@/vuex/store'
 import func from '@/public/func';
 import api from '@/public/api';
 import comment from '@/components/comment/Index'
+import model from '@/components/model/Model'
 import {mapState,mapMutations} from 'vuex';
 export default {
   name:'WorkShow',
   data () {
       return {
           info:{
+          },
+          modelInfo:{
+
           },
           fileTypeO:'',
           fileTypeT:'',
@@ -144,7 +143,7 @@ export default {
   },
   store,
   components: {
-      comment
+      comment,model
   },
   methods:{
         ...mapMutations(["setResourceid","setResourcetitle","setResourceAuthid"]),
@@ -323,7 +322,12 @@ export default {
   },
   mounted () {
     let id = this.$route.params.id;
-    let userid = this.$store.state.userid;
+    let userid;
+    if(localStorage) {
+        userid = localStorage.getItem("modelUserid")
+    }else{
+        userid = this.$store.state.userid;
+    }
     if(!id) {
         this.$route.push('/404');
         return false;
@@ -337,6 +341,10 @@ export default {
             userid:userid
         },
         res => {
+            this.modelInfo = {
+                "modelsrc" : res.data.data.modelsrc,
+                "mimetype" : res.data.data.mimetype,
+            }
             this.info = res.data.data;
             this.info.filetype = this.info.filetype.split("-");
             this.fileTypeO = this.info.filetype[0];
@@ -436,6 +444,9 @@ export default {
                     margin-top: 20px;
                     border-radius: 5px;
                     outline: none;
+                    a{
+                        color: #00b8d4
+                    }
                 }
                 .praise,.collect,.down,.share{
                     border: 1px solid #00b8d4;
@@ -444,6 +455,10 @@ export default {
                     &:hover{
                         background-color: #00b8d4;
                         color: #fff;
+                        a{
+                        color: #fff;
+                            
+                        }
                     }
                     &：focus{
                         border: 1px solid #fff;

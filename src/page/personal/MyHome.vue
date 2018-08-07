@@ -39,7 +39,7 @@
                     </el-col>
                     <el-col class="img_single" v-for='(list,index) in allModules' :key="index" v-if="list.state === 0">
                         <div class="grid-content">
-                            <img src="../../assets/img/twod/imglist1.png" alt="">
+                            <img :src="list.modelimg" alt="" onerror="javascript:this.src=window.errorImg">
                         </div>
                         <div class="bachover" @click="$router.push({path:`/model/draft/${list.id}`})" v-moduleHover></div>
                         <div class="moduleAuthor" v-moduleShow>
@@ -47,7 +47,9 @@
                             <el-dropdown class="fr" @command="handNoPublish">
                                 <span class="el-dropdown-link iconfont icon-31shezhi"></span>
                                 <el-dropdown-menu slot="dropdown">
+                                    
                                     <el-dropdown-item :command="{'state':7,'id':list.id,'index':index}">发布</el-dropdown-item>
+                                    <el-dropdown-item><router-link :to="{path:`/model/draft/${list.id}`}">编辑</router-link></el-dropdown-item>
                                     <el-dropdown-item :command="{'state':2,'id':list.id,'index':index}">删除</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
@@ -62,7 +64,7 @@
                 <el-row type="flex" class="row-bg" justify="space-between" ref="">
                     <el-col class="img_single" v-for='(list,index) in allModules' :key="index" v-if="list.state === 1">
                         <div class="grid-content">
-                            <img src="../../assets/img/twod/imglist1.png" alt="">
+                            <img :src="list.modelimg" alt="" onerror="javascript:this.src=window.errorImg">
                         </div>
                         <div class="bachover" @click="$router.push({path:`/model/detail/${list.id}`})" v-moduleHover></div>
                         <div class="moduleAuthor" v-moduleShow>
@@ -348,6 +350,12 @@ export default {
                 res => {
                     if(res.data.status === 200) {
                         this.user = res.data.data.user;
+                        Array.from(res.data.data.data,(value) => {
+                            if(!value.modelimg) {
+                                value.modelimg = "null"
+                            }
+                            return value
+                        })
                         this.allModules = res.data.data.data;
                         if(!this.user.headportrait) {
                             this.user.headportrait = "/res/static/img/logo.42adf1f.png"
@@ -367,7 +375,7 @@ export default {
         .my-home-wrapper{
             max-width: 1200px;
             margin: 0 auto;
-            // background: url(../../assets/img/mineBac.jpg) no-repeat;
+            background: url(../../assets/img/mineBac.jpg) no-repeat;
             .personal-info{
                 height: 216px;
                 padding-top: 60px;
@@ -378,6 +386,7 @@ export default {
                     img{
                         width: 100%;
                         height: 100%;
+                        border-radius: 50%;
                     }
                 }
                 .author-info{
@@ -421,7 +430,7 @@ export default {
             .el-row--flex {
                 flex-wrap:wrap;
                 .img_single{
-                    width: 380px;
+                    width: 387px;
                     height: 242px;
                     margin-top: 10px;
                     margin-bottom: 10px;
@@ -506,7 +515,7 @@ export default {
             
         }
         .avatar-uploader .el-upload {
-            width: 380px;
+            width: 387px;
             height: 242px;
             border: 1px dashed #d9d9d9;
             border-radius: 6px;
@@ -533,6 +542,11 @@ export default {
         }
         .el-dropdown{
             color: #fff;
+        }
+    }
+    .el-dropdown-menu .el-dropdown-menu__item{
+        a{
+            color:#606266;
         }
     }
     

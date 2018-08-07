@@ -1,6 +1,6 @@
 <!-- 2D -->
 <template>
-  <div id="twoD" v-loading="loading">
+  <div id="threeD" v-loading="loading">
     <div class="mainNav">
         <div class="subMainNavBox">
             <div class="mainNav-middle fl cur">
@@ -15,7 +15,7 @@
                     <el-menu :default-active="activeIndex" class="el-menu-demo" mode="horizontal" @select="handleSelect">
                         <el-submenu index="1">
                             <template slot="title">全部分类</template>
-                            <el-submenu v-for="(option,index) in options" :key="index" :index="option.label">
+                            <el-submenu v-for="(option,index) in options" :key="index" :index='option.label'>
                                 <template slot="title">{{option.value}}</template>
                                 <el-menu-item v-for="(suboption,subindex) in option.children" :key="subindex" :index="`${option.label}-${suboption.label}`">{{suboption.value}}</el-menu-item>
                                 
@@ -62,7 +62,7 @@
 import func from '@/public/func';
 import api from '@/public/api';
 export default {
-  name: 'Twod',
+  name: 'Threed',
   data(){
       return {
           active:1,
@@ -335,7 +335,7 @@ export default {
         api.modulelist, 
         {
             state:1,
-            type:1,
+            type:2,
             pagenum:this.pagenum,
             pagesize:this.pagesize
         },
@@ -343,7 +343,6 @@ export default {
             this.loading = false;
             let resData = res.data;
             if(resData.status == 200){
-                
                 if(resData.data) {
                     Array.from(resData.data,(value) => {
                         if(!value.modelimg) {
@@ -377,7 +376,7 @@ export default {
             api.modulelist, 
             {
                 sortstate:1,
-                type:1,
+                type:2,
                 pagenum:this.pagenum,
                 pagesize:this.pagesize
             },
@@ -417,7 +416,7 @@ export default {
             api.modulelist, 
             {
                 sortstate:2,
-                type:1,
+                type:2,
                 pagenum:this.pagenum,
                 pagesize:this.pagesize
             },
@@ -457,7 +456,7 @@ export default {
             api.modulelist, 
             {
                 sortstate:3,
-                type:1,
+                type:2,
                 pagenum:this.pagenum,
                 pagesize:this.pagesize
             },
@@ -495,7 +494,7 @@ export default {
             api.modulelist, 
             {
                 state:1,
-                type:1,
+                type:2,
             },
             res => {
                 this.loading = false;
@@ -526,50 +525,51 @@ export default {
             });
       },
       handleSelect(key, keyPath) {
-          this.loading = true;
-          this.lists = [];
-        func.ajaxPost(
-            api.modulelist, 
-            {
-                sortstate:5,
-                filter:keyPath[1],
-                type:1,
-                pagenum:this.pagenum,
-                pagesize:this.pagesize
-            },
-            res => {
-                this.loading = false;
-            let resData = res.data;
-            if(resData.status == 200){
-                if(resData.data) {
-                    if(resData.data.msg) {
-                        this.Message(resData.data.msg,'warning');
-                        this.isAll = false;
-                    }else{
-                        Array.from(resData.data,(value) => {
-                            if(!value.modelimg) {
-                                value.modelimg = "null"
+            this.loading = true;
+            this.lists = [];
+            func.ajaxPost(
+                api.modulelist, 
+                {
+                    sortstate:5,
+                    filter:keyPath[1],
+                    type:2,
+                    pagenum:this.pagenum,
+                    pagesize:this.pagesize
+                },
+                res => {
+                    this.loading = false;
+                    let resData = res.data;
+                    if(resData.status == 200){
+                        if(resData.data) {
+                            if(resData.data.msg) {
+                                this.Message(resData.data.msg,'warning');
+                                this.isAll = false;
+                            }else{
+                                Array.from(resData.data,(value) => {
+                                    if(!value.modelimg) {
+                                        value.modelimg = "null"
+                                    }
+                                    if(!value.headPortraits) {
+                                        value.headPortraits = "null"
+                                    }
+                                    return value
+                                })
+                                this.lists = resData.data;
+                                if(resData.data.length < 15) {
+                                    this.isAll = false;
+                                }else{
+                                    this.isAll = true;
+                                }
                             }
-                            if(!value.headPortraits) {
-                                value.headPortraits = "null"
-                            }
-                            return value
-                        })
-                        this.lists = resData.data;
-                        if(resData.data.length < 15) {
-                            this.isAll = false;
-                        }else{
-                            this.isAll = true;
+                            
+                        }else if(resData.errmsg) {
+                            this.Message(resData.errmsg,error)
                         }
+                    }else{
+                        this.Message(resData.errmsg,error)
                     }
-                    
-                }else if(resData.errmsg) {
-                    this.Message(resData.errmsg,'error')
                 }
-            }else{
-                this.Message(resData.errmsg,'error')
-            }
-        });
+            );
       }
 
   }
@@ -577,7 +577,7 @@ export default {
 
 </script>
 <style lang="less" scoped>
-    #twoD {
+    #threeD {
         width: 100%;
         margin: 0 auto;
         // height: 500px;
@@ -730,13 +730,13 @@ export default {
     }
 </style>
 <style lang="less">
-    #twoD .el-menu--horizontal>.el-submenu .el-submenu__title{
+    #threeD .el-menu--horizontal>.el-submenu .el-submenu__title{
         padding-left: 0;
         padding-right: 105px;
         height: 58px;
         line-height: 58px;
     }
-    #twoD .el-menu--horizontal>.el-submenu.is-active .el-submenu__title{
+    #threeD .el-menu--horizontal>.el-submenu.is-active .el-submenu__title{
         border-bottom:0;
     }
     .el-submenu.is-active .el-submenu__title{
@@ -745,7 +745,7 @@ export default {
     .el-menu--popup-bottom-start{
         margin-top: 0;
     }
-    .el-menu--horizontal .el-menu--collapse .el-menu .el-submenu, .el-menu--popup{
+    .el-menu--collapse .el-menu .el-submenu, .el-menu--popup{
         min-width: 100px!important;
     }
     .el-menu--popup-right-start{
