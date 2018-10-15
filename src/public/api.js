@@ -1,7 +1,9 @@
 let host = '/';
 export default {
     login: host + 'res/login',
+    forumlogin: host + 'forum/login',
     signup: host + 'res/signup',
+    forumsignup: host +'forum/api/v2/users',
     getverifycode: host + 'res/getverifycode',
     checkcode: host + 'res/checkcode',
     setpassword: host + 'res/setpassword',
@@ -10,7 +12,9 @@ export default {
     testimg: host + 'res/testimg',
     filelist: host + 'res/filelist',
     verify: host + 'res/verify',
+    forumconfig: host +'forum/api/config',
     logout: host + 'res/logout',
+    forumlogout: host + 'forum/logout',
     getmodule: host + 'api/material/getmodule',
     dealmodule: host + 'api/material/dealmodule',
     modulelist: host + 'api/material/modulelist',

@@ -14,14 +14,15 @@
                 <div slot="footer" class="dialog-footer">
                     <el-button type="primary" @click="Loginbtn(formLogin)">登录</el-button>
                     <div>
-                        <span class="fl color-font cur" @click="changedialogForgetPassword">忘记密码</span>
-                        <span class="fr">还没有账号?<span class="color-font cur" @click="changedialogSignup">点击注册</span></span>
+                        <p><a class="fr color-font cur" style="font-size:14px;" href="http://www.manykit.com/forum/reset">忘记密码?</a></p>
+                        <!-- <span class="fl color-font cur" @click="changedialogForgetPassword">忘记密码</span> -->
+                        <span class="fl">还没有账号?<span class="color-font cur" @click="changedialogSignup">点击注册</span></span>
                     </div>
                 </div>
             </div>
-            <div class="dialog-right fl">
+            <!-- <div class="dialog-right fl">
                 <img src="" alt="">
-            </div>
+            </div> -->
         </el-dialog>
     </div>
 </template>
@@ -39,6 +40,7 @@ export default {
                 id:'',
                 username: '',
                 password: '',
+                nodebb_csrf:''
             },
             rules1:{
                 username: [
@@ -56,6 +58,17 @@ export default {
     store,    
     computed: {
     },
+    mounted:function(){
+        func.ajaxGet(
+            api.forumconfig, 
+            res => {
+            this.nodebb_csrf=res.data.csrf_token
+            sessionStorage.nodebb_csrf=res.data.csrf_token
+            console.log(res)
+            console.log(this.nodebb_csrf)
+        });
+
+    },
     methods: {
         ...mapMutations(["changedialogLogin","changedialogSignup","changedialogForgetPassword","setisLogin","setusername","setuserid"]),
         Loginbtn(formLogin) {
@@ -68,17 +81,18 @@ export default {
             //     }
             // })
             if(this.formLogin.username && this.formLogin.password) {
-                let publicKey = this.$store.state.publicKey;
-                let privatekey = new NodeRSA(publicKey);
-                let password = privatekey.encrypt(this.formLogin.password,'base64');
+                // let publicKey = this.$store.state.publicKey;
+                // let privatekey = new NodeRSA(publicKey);
+                // let password = privatekey.encrypt(this.formLogin.password,'base64');
                 func.ajaxPost(
                     api.login, 
                     {
                         username:this.formLogin.username,
-                        password:password,
+                        password:this.formLogin.password,
                     },
                     res => {
                     let resData = res.data;
+                    console.log(resData)
                     if(resData.status == 200){
                         if(resData.data) {
                             if(localStorage) {
@@ -98,14 +112,27 @@ export default {
                             this.setuserid(resData.data.id);
                             this.Message('登录成功','success')
                         }else if(resData.errmsg) {
-                            this.Message(resData.errmsg,error)
+                            this.$message({
+                                message:resData.errmsg,
+                                center:true
+                            })
                         }
                     }else if(resData.status == 500){
                         this.Message(resData.errmsg,error)
                     }
                 });
-            }
-            
+                func.ajaxPost(
+                    api.forumlogin, 
+                    {
+                        username:this.formLogin.username,
+                        password:this.formLogin.password,
+                        _csrf:this.nodebb_csrf,
+                        remember:'on',
+                        noscript: false
+                    },
+                    res => {
+                });
+            }   
         },
     },
 }
@@ -114,14 +141,13 @@ export default {
 <style lang="less">
     .dialogLogin {
         .dilog-left{
-            padding: 0 20px;
+            padding: 0px 20px 30px 20px;
             input {
-                width: 260px;
-                height: 32px;
+                width: 526px;
+                height: 40px;
             }
         }
     }
-    
 </style>
 
 

@@ -14,11 +14,12 @@
                     :action="uploadSrc"
                     :data = "fileInfo"
                     :show-file-list="false"
+                    :on-preview="handlePictureCardPreview"
                     :on-change="changeFile"
                     :auto-upload="false"
                     :on-success="uploadSuccess"
                     :on-error="uploadError">
-                    <el-button size="small" type="primary">点击上传</el-button>
+                    <el-button size="small" type="primary" style="line-height:2px;">点击上传</el-button>
                     <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
                     </el-upload>
               </div>
@@ -197,14 +198,19 @@ export default {
             }
             
         },
+        handlePictureCardPreview(file) {
+            console.log(file)
+            this.headimg  = file.url;
+        },
         changeFile(file, fileList) {
             if(fileList.length>1) {
                 fileList = fileList.splice(0,1)
             }
             this.fileList = fileList;
-            this.headimg = file.url
+            this.headimg = URL.createObjectURL(file.raw);
+            // this.headimg = file.url
         },
-        uploadSuccess() {
+        uploadSuccess(res, file) {
             this.Message('保存成功','success')
         },
         uploadError() {

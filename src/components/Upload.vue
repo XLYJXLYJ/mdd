@@ -32,7 +32,7 @@
                     <div class="upload_limit">
                         <p>支持一下格式</p>
                         <p>2D格式:jpg,png,dds,tga</p>
-                        <p>3D格式:fbx,obj,dae,max,stl,pmx,vmd</p>
+                        <p>3D格式:fbx,stl</p>
                         <p>多媒体:MP3</p>
                         <p>每次允许上传一个模型,大小不超过20M</p>
                     </div>

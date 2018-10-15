@@ -21,12 +21,12 @@
             <!-- <img :src="testimg" alt="" style="width:100px;height:100px;"> -->
             <div class="loginBox fr">
                 <div v-if="$store.state.isLogin" class="user_contant">
-                    <div class="news_box">
+                    <!-- <div class="news_box">
                         <div class="new_icon iconfont icon-xiaoxi" @click="changeisShowNews"></div>
                         <transition name="el-fade-in-linear">
                             <message :msg="promptMessage"></message>
                         </transition>
-                    </div>
+                    </div> -->
                     <div class="user_box">
                         <div class="user_icon" @click="showUser">{{$store.state.username}}</div>
                         <transition name="el-fade-in-linear">
@@ -73,6 +73,7 @@ import func from '../public/func';
 import api from '../public/api';
 import {mapState,mapMutations ,mapGetters ,mapActions} from 'vuex'
 import store from '@/vuex/store'
+
 export default {
     data () {
         // 验证用户名
@@ -90,8 +91,8 @@ export default {
             isuserCli:false,
             isnewCli:false,
             uploadState:true,
-            promptMessage:[]
-            
+            promptMessage:[],
+            nodebb_csrf:''  
         }
     },
     components: {
@@ -119,7 +120,7 @@ export default {
             }
         },
         search() {
-            if(!this.text) {
+            if(this.text) {
                 this.$router.push(`/search/${this.text}`)
             }else{
                 this.Message("请输入搜索关键字","success")
@@ -146,6 +147,18 @@ export default {
                     }
                 }
             )
+            func.ajaxPost(
+                api.forumlogout, {
+                    _csrf:sessionStorage.nodebb_csrf,
+                    remember:'off',
+                    noscript: true,
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'},
+                },
+                res => {
+                this.nodebb_csrf=res.data.csrf_token
+                console.log(res)
+                console.log(this.nodebb_csrf)
+            });
         },
         uploadMaterial() {
             let userid = this.$store.state.userid;
@@ -322,6 +335,7 @@ export default {
                         .user_icon{
                             // width: 30px;
                             // height: 30px;
+                            margin-top: 8px;
                             color: #fff;
                             // img{
                             //     width: 100%;
@@ -373,8 +387,8 @@ export default {
         color: #fff!important;
     }
     .dialogForgetPassword .el-dialog,.dialogLogin .el-dialog{
-        width: 685px;
-        height: 306px;
+        width: 600px;
+        height: 307px;
         border-radius: 10px;
         text-align: left;
         .el-dialog__body{
@@ -398,7 +412,7 @@ export default {
         
     }
     .dialogSignup .el-dialog{
-        width: 685px;
+        width: 600px;
         height: 480px;
         border-radius: 10px;
         text-align: left;
@@ -413,8 +427,9 @@ export default {
         }
     }
     .dilog-left{
-        padding: 40px 80px 30px 50px;
-        width: 260px;
+        width: 526px;
+        height: 260px;
+        text-align: center;
         p{
             font-size:18px;
             color:#515666;
@@ -428,10 +443,11 @@ export default {
             border:1px solid #eee;
         }
         button{
-            width:260px;
-            height: 32px;
-            margin-bottom:12px;
+            width:110px;
+            height: 38px;
+            margin-bottom:0px;
             padding: 0;
+            font-size:16px;
         }
         .el-checkbox{
             margin-bottom:12px;

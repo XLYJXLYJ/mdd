@@ -71,7 +71,7 @@ export default {
           checked:'',
           lists:[],
           isAll:false,
-          loading:true,
+          loading:false,
           pagenum:1,
           pagesize:15,
           options:[
@@ -370,7 +370,7 @@ export default {
   },
   methods: {
       recommendedTop() {
-          this.loading = true;
+          this.loading = false;
           this.pagenum = 1;
           this.active = 1;
           func.ajaxPost(
@@ -410,7 +410,7 @@ export default {
         });
       },
       trendingTop() {
-          this.loading = true;
+          this.loading = false;
           this.pagenum = 1;
           this.active = 2;          
           func.ajaxPost(
@@ -450,7 +450,7 @@ export default {
         });
       },
       newTop() {
-          this.loading = true;
+          this.loading = false;
           this.pagenum = 1;
           this.active = 3;          
           func.ajaxPost(
@@ -490,7 +490,7 @@ export default {
         });
       },
       loadMore() {
-          this.loading = true;
+          this.loading = false;
           func.ajaxPost(
             api.modulelist, 
             {
@@ -511,7 +511,7 @@ export default {
                             }
                             return value
                         })
-                        this.lists = [...this.lists,...resData.data];
+                        this.lists = [...resData.data];
                         if(resData.data.length < this.pagesize) {
                             this.isAll = false;
                         }else{
@@ -526,7 +526,7 @@ export default {
             });
       },
       handleSelect(key, keyPath) {
-          this.loading = true;
+          this.loading = false;
           this.lists = [];
         func.ajaxPost(
             api.modulelist, 
@@ -725,6 +725,7 @@ export default {
                 margin-top: 20px;
                 border-radius: 5px;
                 clear: both;
+                cursor: pointer;
             }
         }
     }

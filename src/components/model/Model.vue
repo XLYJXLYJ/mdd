@@ -2,6 +2,7 @@
     <div id="model">
         <iframe src="http://www.manykit.com/model/static/model/fbx/index.html" frameborder="0" v-if="childModelInfo.mimetype == 'fbx'" :data-src="childModelInfo.modelsrc" id="modeliframe"></iframe>
         <iframe src="http://www.manykit.com/model/static/model/stl/index.html" frameborder="0" v-if="childModelInfo.mimetype == 'stl'" :data-src="childModelInfo.modelsrc" id="modeliframe"></iframe>
+        <img v-if="childModelInfo.mimetype == 'png'||childModelInfo.mimetype == 'jpg'" :src="childModelInfo.modelsrc">
     </div>
 </template>
 

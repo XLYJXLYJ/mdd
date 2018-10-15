@@ -50,13 +50,6 @@ const router = new Router({
                 'footer': Footer
             }
         }, {
-            path: '/3D',
-            components: {
-                'header': Header,
-                'main': Threed,
-                'footer': Footer
-            }
-        }, {
             path: '/search/:value',
             components: {
                 'header': Header,

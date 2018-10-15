@@ -39,6 +39,8 @@ import store from '@/vuex/store'
 import {mapState,mapMutations ,mapGetters ,mapActions} from 'vuex'
 import func from '@/public/func';
 import api from '@/public/api';
+import Vue from 'vue'
+import axios from 'axios'
 export default {
     data () {
         return {
@@ -70,15 +72,16 @@ export default {
     methods: {
         ...mapMutations(["changedialogLogin","changedialogSignup"]),
         Signupbtn() {
-            let publicKey = this.$store.state.publicKey;
-            let privatekey = new NodeRSA(publicKey);
-            let password = privatekey.encrypt(this.formSignup.password,'base64');
+            let that = this;
+            // let publicKey = this.$store.state.publicKey;
+            // let privatekey = new NodeRSA(publicKey);
+            // let password = privatekey.encrypt(this.formSignup.password,'base64');
             func.ajaxPost(
                 api.signup,
                 {
                     username:this.formSignup.username,
                     mail:this.formSignup.mail,
-                    password:password,
+                    password:this.formSignup.password,
                 },
                 res => {
                     if(res.data.status==200) {
@@ -93,6 +96,25 @@ export default {
                     }
                 }
             )
+
+            axios.post('/forum/api/v2/users', 
+                {
+                    _uid:1,
+                    username:this.formSignup.username,
+                    mail:this.formSignup.mail,
+                    password:this.formSignup.password,
+                },
+                {
+                    headers: {'Authorization':'Bearer db7a60a5-6c70-4057-b1d4-1dd289895c31'},
+                }
+            )
+            .then(response => {
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+
         },
     },
 }
@@ -109,8 +131,8 @@ export default {
             padding: 0;
         }
         .el-input .el-input__inner{
-            width: 260px;
-            height: 32px;
+            width: 526px;
+            height: 40px;
         }
     }
 </style>

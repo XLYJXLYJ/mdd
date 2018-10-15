@@ -510,7 +510,7 @@ export default {
                             }
                             return value
                         })
-                        this.lists = [...this.lists,...resData.data];
+                        this.lists = [...resData.data];
                         if(resData.data.length < this.pagesize) {
                             this.isAll = false;
                         }else{
@@ -725,6 +725,7 @@ export default {
                 margin-top: 20px;
                 border-radius: 5px;
                 clear: both;
+                cursor: pointer;
             }
         }
     }
